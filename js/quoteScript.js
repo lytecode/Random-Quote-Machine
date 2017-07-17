@@ -1,43 +1,51 @@
 
 $(document).ready(function(){
 
-				var quote = document.getElementById('quote');
-				var author = document.getElementById('author');
-				var tweetQuote = document.getElementById('tweetQuote');
+	var quote;
+	var author;
 
-				tweet.addEventListener("click", function(){
-					pushTweet();
-				});
+	function getNewQuote(){
+		$.getJSON("https://talaikis.com/api/quotes/random/", function(responseData){
 
-				function pushTweet(){
-					//grab tweet text
-					var myTweet = quote.textContent;
-					var by = author.textContent;
-					//Set new href to include myTweet
-					tweet.href = `https://twitter.com/intent/tweet?text=${myTweet + by}`;
-				}
+				quote = responseData["quote"];
+				author = responseData["author"];
+
+				$("#quote").text(quote);
+				$("#author").text(" -- "+author);
+		});
+	}
 
 
-				$("#newQuote").on("click", function(){
-					$.getJSON("https://talaikis.com/api/quotes/", function(data){
-						for(var i in data){
-							var quote = JSON.stringify(data[i]["quote"]);
-							var author = JSON.stringify(data[i]["author"]);
-							$("#quote").text(quote);
-							$("#author").text("-- "+author);
+	function changeColor(){
+		var colors = ["#3b6938", "#cfeff0", "#bbc6ce", "#f6546a", "#088da5", "#003366", "#d0b38e", "#4b3624", "#bb9c8e", "#180B89", "#042E09", "#eed78f", "#ff8e8e", "#008080", "#088da5", "#003366", "#0080c0", "#80c000"];
 
-							//$("#author").append("<br>");
-						}
-					});
+		var newColor = colors[Math.floor(Math.random() * (colors.length))];
+		
+		$("#tweetQuote").css("background-color", newColor);
+		$("#newQuote").css("background-color", newColor);
+		$("#bg-color").css("background-color", newColor);
 
-					var colors = ["#3b6938", "#cfeff0", "#bbc6ce", "#f6546a", "#088da5", "#003366", "#d0b38e", "#4b3624", "#bb9c8e", "#180B89", "#042E09", "#eed78f", "#ff8e8e", "#008080", "#088da5", "#003366", "#0080c0", "#80c000"];
+	}
 
-					var newColor = colors[Math.floor(Math.random() * (colors.length))];
-					console.log("Wasted color: ", newColor);
+	function shareQuote(){
+		//grab the quote
+		var tweetQuote = document.getElementById('quote').textContent;
+		var tweetAuthor = document.getElementById('author').textContent;
+		window.open(`https://twitter.com/intent/tweet?text=${tweetQuote + tweetAuthor}`);
+	}
 
-					$("#tweetQuote").css("background-color", newColor);
-					$("#newQuote").css("background-color", newColor);
-					$("#bg-color").css("background-color", newColor);
-					//randomColors();
-				});
+	//get a random quote
+	getNewQuote();
+	changeColor();
+
+	$('#newQuote').on('click', function(){
+		getNewQuote();
+		changeColor();
+	});
+
+	//tweet the quote
+	$("#tweet").on('click', function(){
+		shareQuote();
+	});
+
 });
