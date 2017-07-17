@@ -9,7 +9,7 @@ $(document).ready(function(){
 			url: 'https://thesimpsonsquoteapi.glitch.me/quotes',//'http://quotes.stormconsultancy.co.uk/random.json',
 			dataType: 'json',
 			success: function(responseData){
-				console.log(responseData);
+				
 				quote = responseData[0]["quote"];
 				author = responseData[0]["character"];
 
